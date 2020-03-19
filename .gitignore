@@ -1,3 +1,7 @@
+.vscode
+__pycache__/
+venv/
+
 test_bc.txt
 test_file.txt
 
