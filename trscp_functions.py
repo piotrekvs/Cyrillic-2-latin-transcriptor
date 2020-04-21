@@ -1,5 +1,73 @@
 import re
 
+class SimpleTransliterationToLatin:
+    def __init__(self, trslit_table: dict, reverse: bool= False):
+        self.cyrillic_to_latin = trslit_table
+        
+        # Create data structures for reverse transliteration
+        self.latin_to_cyrillic: dict={}
+        self.latin_multigraphs: dict={}
+        if reverse == True:
+            for key, val in self.cyrillic_to_latin.items():
+                # Reverse transliteration table
+                self.latin_to_cyrillic[ val ] = key
+                
+                # Create dictionary for multigraph processing
+                # { 'first_letter' : len(multigraph) }
+                if len(val) > 1:
+                    if  val[0] not in self.latin_multigraphs:
+                        self.latin_multigraphs[ val[0] ] = len(val)
+                    elif self.latin_multigraphs[ val[0] ] < len(val):
+                        self.latin_multigraphs[ val[0] ] = len(val)
+
+
+    def Cyrillic2Latin(self, source_text: str):
+        print("awdawd")
+        end_text: str=''
+        for i in range(len(source_text)):
+            if source_text[i] in self.cyrillic_to_latin.keys():
+                end_text += self.cyrillic_to_latin[str(source_text[i])] 
+            else:
+                end_text += source_text[i]
+        return end_text
+    
+    def Latin2Cyrillic(self, source_text: str):
+        end_text: str=''
+        temp_multigraph: str=''
+        last_length: int=0
+        i = 0
+        while i < len(source_text):
+            if last_length == 0:
+                if source_text[i] in self.latin_multigraphs:
+                    temp_multigraph = source_text[i]
+                    last_length = 1
+                else:
+                    # Basic transliteration
+                    end_text += self.latin_to_cyrillic[ source_text[i] ] if source_text[i] in self.latin_to_cyrillic else source_text[i]
+
+            else:
+                ###if len(temp_multigraph) < self.latin_multigraphs[ temp_multigraph[0] ]:
+                temp_multigraph = temp_multigraph + source_text[i]
+                
+                if temp_multigraph in self.latin_to_cyrillic:
+                    last_length = len(temp_multigraph)
+                
+                if len(temp_multigraph) == self.latin_multigraphs[ temp_multigraph[0] ] or i+1 == len(source_text):
+                    end_text += self.latin_to_cyrillic[ temp_multigraph[:last_length] ]
+                    i = i - (len(temp_multigraph) - last_length)
+                    temp_multigraph = ''
+                    last_length = 0
+            # Increase iterator
+            i = i+1
+        
+        return end_text
+
+
+
+
+def seperate_words(in_s):
+    return re.split(r'(\W+)', in_s)
+
 def transcribe_ru2pl(text2t):
     # Complex transcription
     ru_vowels= ('А', 'а', 'Э', 'э', 'Ы', 'ы', 'У', 'у', 'О', 'о', 
