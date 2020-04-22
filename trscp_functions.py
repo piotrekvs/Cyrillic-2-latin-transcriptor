@@ -1,12 +1,17 @@
 import re
 
 class SimpleTransliterationToLatin:
-    def __init__(self, trslit_table: dict, reverse: bool= False):
-        self.cyrillic_to_latin = trslit_table
-        
-        # Create data structures for reverse transliteration
+    def __init__(self, translit_table: tuple, reverse: bool= False):
+        # Initialize dictionaries
+        self.cyrillic_to_latin: dict={}
         self.latin_to_cyrillic: dict={}
         self.latin_multigraphs: dict={}
+
+        for i in translit_table:
+            self.cyrillic_to_latin[i[0]] = i[1]
+        
+        # Create data structures for reverse transliteration
+        
         if reverse == True:
             for key, val in self.cyrillic_to_latin.items():
                 # Reverse transliteration table

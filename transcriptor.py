@@ -1,7 +1,7 @@
 import re
 import time
 import trscp_functions as tr
-import Language_packs.Languages_data as Ldata
+import Language_packs.iso_9_1995 as Ldata
 
 def get_text_from_file():
     with open('Test/file.txt', mode='r', encoding='utf-8') as ff:
@@ -17,7 +17,7 @@ def main():
     #    print(i,end='')
     
     # Class
-    ru_pl_translit = tr.SimpleTransliterationToLatin(Ldata.Cyrill2Latin_ISO_9_1995, True)
+    ru_pl_translit = tr.SimpleTransliterationToLatin(Ldata.ISO_9_1995, True)
     end_text = ru_pl_translit.Cyrillic2Latin(entered_text)
     
     
